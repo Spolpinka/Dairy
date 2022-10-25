@@ -14,6 +14,30 @@ public class Task {
     private int ID;
     private static int counter;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public TypeOfTasks getType() {
+        return type;
+    }
+
+    public LocalDate getCreationTimeDate() {
+        return creationTimeDate;
+    }
+
+    public Repeatable getRepeatable() {
+        return repeatable;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
     public Task(String name, TypeOfTasks type)
             throws NoNameException, NoTypeException {
         if (name != null && !name.isEmpty() && !name.isBlank()) {
