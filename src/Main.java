@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +20,7 @@ public class Main {
                         deleteTask(sc);
                         break;
                     case 3:
-                        printTasksOnDay(sc);
+                        getTasksOnDay(sc);
                         break;
                     case 0:
                         System.exit(0);
@@ -106,10 +110,25 @@ public class Main {
         }
     }
 
-    private static void printTasksOnDay(Scanner scanner) {
-        System.out.println("введите дату для печати заданий в формате DD-MM-YYYY : ");
-        Dairy dairy = new Dairy();
-        dairy.printTasksOnDate(scanner.nextLine());
+    private static void getTasksOnDay(Scanner scanner) {
+        while (true) {
+            System.out.println("введите дату для печати заданий в формате DD-MM-YYYY : ");
+            Dairy dairy = new Dairy();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
+            String dateS = scanner.nextLine();
+            LocalDate date = null;
+            try {
+                date = LocalDate.parse(dateS, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Неверный формат ввода");
+                continue;
+            }
+            List<Task> tasksOnDate = dairy.getTasksOnDate(date);
+            for (int i = 0; i < tasksOnDate.size(); i++) {
+                System.out.println(tasksOnDate.get(i));
+            }
+            break;
+        }
     }
 
     private static void deleteTask(Scanner sc) {

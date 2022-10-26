@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.Objects;
 
 //Каждая задача обязательно имеет заголовок. У каждой задачи может быть поле для описания.
 // Также все задачи обязательно нужно делить по типу: личные или рабочие задачи.
@@ -91,5 +92,21 @@ public class Task {
                 ", время создания" + creationTimeDate.getDayOfMonth() + "." + creationTimeDate.getMonthValue() + "." + creationTimeDate.getYear() +
                 ", повторяется - " + repeatable.getMessage() +
                 ", ID " + ID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return ID == task.ID && Objects.equals(name, task.name) &&
+                Objects.equals(describe, task.describe) &&
+                type == task.type && Objects.equals(creationTimeDate, task.creationTimeDate) &&
+                repeatable == task.repeatable;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, describe, type, creationTimeDate, repeatable, ID);
     }
 }
