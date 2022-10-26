@@ -59,6 +59,14 @@ public class Task {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
     public String getDescribe() {
         return describe;
     }

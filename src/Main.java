@@ -1,7 +1,9 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -22,6 +24,14 @@ public class Main {
                     case 3:
                         getTasksOnDay(sc);
                         break;
+                    case 4:
+                        getDeletedTasks();
+                    case 5:
+                        printAllTasks();
+                    case 6:
+                        setTaskName(sc);
+                    case 7:
+                        setTaskDescription(sc);
                     case 0:
                         System.exit(0);
                 }
@@ -35,10 +45,14 @@ public class Main {
 
     private static void printMenu() {
         System.out.println(
-                "1. Добавить задачу \n" +
-                        "2. Удалить задачу\n" +
-                        "3. Получить задачи на указанный день\n" +
-                        "0. Выход"
+                "1. Добавить задачу,\n" +
+                        "2. Удалить задачу,\n" +
+                        "3. Получить задачи на указанный день,\n" +
+                        "4. Получить список удаленных задач,\n" +
+                        "5. Распечатать список всех задач,\n" +
+                        "6. Внести изменения в заголовок задачи,\n" +
+                        "7. Внести изменение в описание задачи,\n" +
+                        "0. Выход."
         );
     }
 
@@ -123,13 +137,68 @@ public class Main {
                 System.out.println("Неверный формат ввода");
                 continue;
             }
-            List<Task> tasksOnDate = dairy.getTasksOnDate(date);
-            for (int i = 0; i < tasksOnDate.size(); i++) {
+            List<Task> tasksOnDate = dairy.getTasksOnDate(date);//получили список задач
+            for (int i = 0; i < tasksOnDate.size(); i++) {//напечатали список задач
                 System.out.println(tasksOnDate.get(i));
             }
             break;
         }
     }
+    private static void getDeletedTasks() {
+        HashMap<Integer, Task> deletedTasks = Dairy.getDeletedTasks();
+        for (Map.Entry<Integer, Task> task : deletedTasks.entrySet()) {//выводим в консоль удаленные задачи
+            System.out.println(task.getValue());
+        }
+    }
+
+    private static void printAllTasks() {
+        HashMap<Integer, Task> dairy = Dairy.getDairy();
+        for (Map.Entry<Integer, Task> task :
+                dairy.entrySet()) {
+            System.out.println(task.getValue());
+        }
+    }
+
+    private static void setTaskName(Scanner scanner) {
+        Dairy dairy = new Dairy();
+        int id;
+        while (true) {
+            System.out.println("Введите id задачи для изменения её заголовка: ");
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                if (dairy.isTaskExist(id)) {
+                    break;
+                } else {
+                    System.out.println("Задачи с таким id не существует, уточните id");
+                }
+            } else {
+                System.out.println("Введено не число, попробуйте еще раз!");
+            }
+        }
+        System.out.println("Введите новый заголовок задания: ");
+        dairy.setTaskName(id, scanner.nextLine());
+    }
+    private static void setTaskDescription(Scanner scanner) {
+        Dairy dairy = new Dairy();
+        int id;
+        while (true) {
+            System.out.println("Введите id задачи для изменения её заголовка: ");
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                if (dairy.isTaskExist(id)) {
+                    break;
+                } else {
+                    System.out.println("Задачи с таким id не существует, уточните id");
+                }
+            } else {
+                System.out.println("Введено не число, попробуйте еще раз!");
+            }
+        }
+        System.out.println("Введите новое описание задания: ");
+        dairy.setTaskDescription(id, scanner.nextLine());
+    }
+
+
 
     private static void deleteTask(Scanner sc) {
         while (true) {

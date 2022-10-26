@@ -38,11 +38,31 @@ public class Dairy {
         if (task != null) {
             deletedTasks.put(task.getID(), task);
         } else {
-            throw new NoTaskException("Такой задачи нет в ежедневнике!");
+            throw new NoTaskException("Такой задачи нет в ежедневнике - нечего удалять!");
         }
     }
 
     public static HashMap<Integer, Task> getDairy() {
         return dairy;
+    }
+
+    public static HashMap<Integer, Task> getDeletedTasks() {
+        return deletedTasks;
+    }
+
+    public static boolean isTaskExist(int id) {
+        if (dairy.containsKey(id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setTaskName(int id, String newName) {
+        dairy.get(id).setName(newName);
+    }
+
+    public void setTaskDescription(int id, String newDescription) {
+        dairy.get(id).setDescribe(newDescription);
     }
 }
