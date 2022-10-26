@@ -14,6 +14,46 @@ public class Task {
     private int ID;
     private static int counter;
 
+
+
+    public Task(String name, TypeOfTasks type)
+            throws NoNameException, NoTypeException {
+        if (name != null && !name.isEmpty() && !name.isBlank()) {
+            this.name = name;
+        } else {
+            throw new NoNameException("У задачи отсутствует заголовок!");
+        }
+        this.describe = "";//можно не указывать, тогда поле пустое
+        if (type != null) {
+            this.type = type;
+        } else {
+            throw new NoTypeException("У задачи отсутствует тип личная/рабочая!");
+        }
+        this.creationTimeDate = LocalDate.now();
+        this.ID = counter+1;
+        this.repeatable = Repeatable.ONCE;//по умолчанию однократно
+        System.out.println("Задача " + name + " создана!");
+    }
+
+    public Task(String name, String describe, TypeOfTasks type)
+            throws NoNameException, NoTypeException, NoDescException {
+        new Task(name, type);
+        if (describe != null && !describe.isBlank() && !describe.isEmpty()) {
+            this.describe = describe;
+        } else {
+            throw new NoDescException("У задачи нет описания!");
+        }
+    }
+
+    public Task(String name, String describe, TypeOfTasks type, Repeatable repeatable)
+            throws NoNameException, NoTypeException, NoDescException, NoRepeatException {
+        new Task(name, describe, type);
+        if (repeatable != null) {
+            this.repeatable = repeatable;
+        } else {
+            throw new NoRepeatException("У задачи не признака повторяемости!");
+        }
+    }
     public String getName() {
         return name;
     }
@@ -38,45 +78,18 @@ public class Task {
         return ID;
     }
 
-    public Task(String name, TypeOfTasks type)
-            throws NoNameException, NoTypeException {
-        if (name != null && !name.isEmpty() && !name.isBlank()) {
-            this.name = name;
-        } else {
-            throw new NoNameException("У задачи отсутствует заголовок!");
-        }
-        this.describe = "";//можно не указывать, тогда поле пустое
-        if (type != null) {
-            this.type = type;
-        } else {
-            throw new NoTypeException("У задачи отсутствует тип личная/рабочая!");
-        }
-        this.creationTimeDate = LocalDate.now();
-        this.ID = counter+1;
-        this.repeatable = Repeatable.ONCE;//по умолчанию однократно
-    }
-
-    public Task(String name, String describe, TypeOfTasks type)
-            throws NoNameException, NoTypeException, NoDescException {
-        new Task(name, type);
-        if (describe != null && !describe.isBlank() && !describe.isEmpty()) {
-            this.describe = describe;
-        } else {
-            throw new NoDescException("У задачи нет описания!");
-        }
-    }
-
-    public Task(String name, String describe, TypeOfTasks type, LocalDate creationTimeDate, Repeatable repeatable, int ID)
-            throws NoNameException, NoTypeException, NoDescException, NoRepeatException {
-        new Task(name, describe, type);
-        if (repeatable != null) {
-            this.repeatable = repeatable;
-        } else {
-            throw new NoRepeatException("У задачи не признака повторяемости!");
-        }
-    }
-
     public LocalDate getNextTime() {
         return repeatable.getNextTime(creationTimeDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Задача: " +
+                " Заголовок - " + name +
+                ", описание - " + describe +
+                ", тип - " + type +
+                ", время создания" + creationTimeDate.getDayOfMonth() + "." + creationTimeDate.getMonthValue() + "." + creationTimeDate.getYear() +
+                ", повторяется - " + repeatable.getMessage() +
+                ", ID " + ID;
     }
 }

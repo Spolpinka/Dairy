@@ -14,6 +14,10 @@ public class Dairy {
         }
     }
 
+    public void printTasksOnDate(String date) {
+
+    }
+
     public void deleteTask(int id) throws NoTaskException {
         Task task = dairy.remove(id);
         if (task != null) {

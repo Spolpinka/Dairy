@@ -16,7 +16,7 @@ public class Main {
                         deleteTask(sc);
                         break;
                     case 3:
-                        //обработка 3
+                        printTasksOnDay(sc);
                         break;
                     case 0:
                         System.exit(0);
@@ -41,7 +41,75 @@ public class Main {
     private static void inputTask(Scanner scanner) {
         System.out.println("Введите название задачи: ");
         String taskName = scanner.next();
+        System.out.println("Введите описание задачи: ");
+        String taskDescribe = scanner.next();
+        TypeOfTasks type = getTypeOfTask(scanner);
+        Repeatable repeatable = getRepeatable(scanner);
+        try {
+            Dairy dairy = new Dairy();
+            dairy.addTask(new Task(taskName, taskDescribe, type, repeatable));
+        } catch (NoNameException | NoTypeException | NoDescException | NoRepeatException | NoTaskException e) {
+            System.out.println(e);
+        }
 
+    }
+
+    private static TypeOfTasks getTypeOfTask(Scanner scanner) {
+        TypeOfTasks type;
+        while (true) {
+            System.out.println("Введите категорию задачи:\n" +
+                    "0. личная,\n" +
+                    "1. рабочая.");
+            if (scanner.hasNextInt()) {
+                int i = scanner.nextInt();
+                if (i == 0) {
+                    return TypeOfTasks.PERSONAL;
+                } else if (i == 1) {
+                    return TypeOfTasks.WORK;
+                } else {
+                    System.out.println("введено иное число, выберите из списка!");
+                }
+            } else {
+                System.out.println("Введено не число, введите число из списка!");
+            }
+        }
+    }
+
+    private static Repeatable getRepeatable(Scanner scanner) {
+        Repeatable repeatable;
+        while (true) {
+            System.out.println("Введите повторяемость задачи:\n" +
+                    "0. однократная,\n" +
+                    "1. ежедневная,\n" +
+                    "2. еженедельная,\n" +
+                    "3. ежемесячная,\n" +
+                    "4. ежегодная.\n");
+            if (scanner.hasNextInt()) {
+                int i = scanner.nextInt();
+                switch (i) {
+                    case 0:
+                        return Repeatable.ONCE;
+                    case 1:
+                        return Repeatable.DAILY;
+                    case 2:
+                        return Repeatable.WEEKLY;
+                    case 3:
+                        return Repeatable.MOUTHLY;
+                    case 4:
+                        return Repeatable.YEARLY;
+                    default:
+                        System.out.println("введено иное число, выберите из списка!");
+                }
+            } else {
+                System.out.println("Введено не число, введите число из списка!");
+            }
+        }
+    }
+
+    private static void printTasksOnDay(Scanner scanner) {
+        System.out.println("введите дату для печати заданий в формате DD-MM-YYYY : ");
+        Dairy dairy = new Dairy();
+        dairy.printTasksOnDate(scanner.nextLine());
     }
 
     private static void deleteTask(Scanner sc) {

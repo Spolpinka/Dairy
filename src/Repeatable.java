@@ -24,4 +24,8 @@ public enum Repeatable {
         }
         return null;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }
