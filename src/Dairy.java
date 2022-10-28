@@ -1,8 +1,5 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //В ежедневник можно заносить задачи, можно удалять их, можно получать список задач на предстоящий день.
 //Все задачи должны храниться в коллекции, тип которой нужно выбрать самостоятельно как самый оптимальный для работы.
@@ -31,6 +28,20 @@ public class Dairy {
             }
         }
         return taskList;
+    }
+
+    public Map<LocalDate, List<Task>> getGroupedTasks(LocalDate date) {
+        Map<LocalDate, List<Task>> groupedTasks = new LinkedHashMap<>();
+        LocalDate lastDay = date;
+        LocalDate day = LocalDate.now();
+
+        while (day.getDayOfYear() == lastDay.getDayOfYear()) {//выбираем задания на каждый день до заданного пользователем
+            List<Task> tasksOnDay = new ArrayList<>();
+            groupedTasks.put(day, tasksOnDay);
+            day.plusDays(1);
+        }
+
+        return groupedTasks;//возвращаем итоговую мапу <день, List задач на этот день>
     }
 
     public void deleteTask(int id) throws NoTaskException {

@@ -32,6 +32,8 @@ public class Main {
                         setTaskName(sc);
                     case 7:
                         setTaskDescription(sc);
+                    case 8:
+                        getGroupedTasks(sc);
                     case 0:
                         System.exit(0);
                 }
@@ -52,6 +54,7 @@ public class Main {
                         "5. Распечатать список всех задач,\n" +
                         "6. Внести изменения в заголовок задачи,\n" +
                         "7. Внести изменение в описание задачи,\n" +
+                        "8. Получить задачи сгруппированные по дням за определенный период\n" +
                         "0. Выход."
         );
     }
@@ -198,6 +201,32 @@ public class Main {
         dairy.setTaskDescription(id, scanner.nextLine());
     }
 
+    private static void getGroupedTasks(Scanner scanner) {
+        while (true) {
+            System.out.println("введите крайнюю дату для выгрузки сгруппированных тасков в формате DD-MM-YYYY : ");
+            Dairy dairy = new Dairy();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
+            String dateS = scanner.nextLine();
+            LocalDate date = null;
+            try {
+                date = LocalDate.parse(dateS, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Неверный формат ввода");
+                continue;
+            }
+            Map<LocalDate, List<Task>> groupedTasks = dairy.getGroupedTasks(date);//получили список задач, сгруппированный по дням, можно сделать любой отрезов времени в принципе
+            for (Map.Entry<LocalDate, List < Task >> entry:
+            groupedTasks.entrySet()){
+                LocalDate currentDate = entry.getKey();
+                System.out.println("на дату " + currentDate.getDayOfMonth() + "." + currentDate.getMonthValue() +
+                        "." + currentDate.getYear() + ":");
+                for (Task t :
+                        entry.getValue()) {
+                    System.out.println(t);
+                }
+            }
+        }
+    }
 
 
     private static void deleteTask(Scanner sc) {
