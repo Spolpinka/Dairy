@@ -1,3 +1,5 @@
+package dairy;
+
 public enum TypeOfTasks {
 
     PERSONAL("Личная задача"),

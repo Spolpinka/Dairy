@@ -1,3 +1,5 @@
+package exceptions;
+
 public class NoTypeException extends Exception {
     private String message;
 

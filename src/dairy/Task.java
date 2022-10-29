@@ -1,3 +1,10 @@
+package dairy;
+
+import exceptions.NoDescException;
+import exceptions.NoNameException;
+import exceptions.NoRepeatException;
+import exceptions.NoTypeException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -85,10 +92,6 @@ public class Task {
 
     public int getID() {
         return ID;
-    }
-
-    public LocalDate getNextTime() {
-        return repeatable.getNextTime(creationTimeDate);
     }
 
     @Override

@@ -1,3 +1,11 @@
+package main;
+
+import dairy.Dairy;
+import dairy.Repeatable;
+import dairy.Task;
+import dairy.TypeOfTasks;
+import exceptions.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -115,7 +123,7 @@ public class Main {
                     case 2:
                         return Repeatable.WEEKLY;
                     case 3:
-                        return Repeatable.MOUTHLY;
+                        return Repeatable.MONTHLY;
                     case 4:
                         return Repeatable.YEARLY;
                     default:

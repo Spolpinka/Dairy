@@ -1,3 +1,5 @@
+package exceptions;
+
 public class NoRepeatException extends Exception {
     private String message;
 
