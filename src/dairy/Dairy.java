@@ -34,7 +34,7 @@ public class Dairy {
         return taskList;
     }
 
-    public Map<LocalDate, List<Task>> getGroupedTasks(LocalDate date) {
+    public Map<LocalDate, List<Task>> getGroupedTasks(LocalDate date) {//собираем мапу, ключ - следующая дата, значение - лист заданий на эту дату
         Map<LocalDate, List<Task>> groupedTasks = new LinkedHashMap<>();
         LocalDate day = LocalDate.now();
 
