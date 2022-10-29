@@ -36,13 +36,12 @@ public class Dairy {
 
     public Map<LocalDate, List<Task>> getGroupedTasks(LocalDate date) {
         Map<LocalDate, List<Task>> groupedTasks = new LinkedHashMap<>();
-        LocalDate lastDay = date;
         LocalDate day = LocalDate.now();
 
-        while (day.getDayOfYear() == lastDay.getDayOfYear()) {//выбираем задания на каждый день до заданного пользователем
+        while (day.getDayOfYear() == date.getDayOfYear()) {//выбираем задания на каждый день до заданного пользователем
             List<Task> tasksOnDay = new ArrayList<>();
             groupedTasks.put(day, tasksOnDay);
-            day.plusDays(1);
+            day = day.plusDays(1);
         }
 
         return groupedTasks;//возвращаем итоговую мапу <день, List задач на этот день>
@@ -66,11 +65,7 @@ public class Dairy {
     }
 
     public static boolean isTaskExist(int id) {
-        if (dairy.containsKey(id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return dairy.containsKey(id);
     }
 
     public void setTaskName(int id, String newName) {

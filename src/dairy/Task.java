@@ -100,9 +100,9 @@ public class Task {
                 " Заголовок - " + name +
                 ", описание - " + describe +
                 ", тип - " + type +
-                ", время создания" + creationTimeDate.getDayOfMonth() + "." + creationTimeDate.getMonthValue() + "." + creationTimeDate.getYear() +
+                ", дата создания: " + creationTimeDate.getDayOfMonth() + "." + creationTimeDate.getMonthValue() + "." + creationTimeDate.getYear() +
                 ", повторяется - " + repeatable.getMessage() +
-                ", ID " + ID;
+                ", ID - " + ID;
     }
 
     @Override

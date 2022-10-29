@@ -8,39 +8,40 @@ public enum Repeatable {
     MONTHLY("Ежемесячно"),
     YEARLY("Ежегодно"),
     ONCE("Единожды");
-    private String message;
+    private final String message;
     Repeatable(String message) {
         this.message = message;
     }
 
     public LocalDate getNextDate(Task task) {
         LocalDate nextDate = LocalDate.now();
+        LocalDate taskDate = task.getCreationTimeDate();
         switch (this) {
             case DAILY:
                 return nextDate;
             case WEEKLY:
-                while (nextDate.getDayOfWeek() != task.getCreationTimeDate().getDayOfWeek()){
-                    nextDate.plusDays(1);
+                while (nextDate.getDayOfWeek() != taskDate.getDayOfWeek()){
+                    nextDate = nextDate.plusDays(1);
                 }
                 return nextDate;
             case MONTHLY:
-                if (nextDate.getDayOfMonth() > task.getCreationTimeDate().getDayOfMonth()){
-                    nextDate.plusMonths(1);
+                if (nextDate.getDayOfMonth() > taskDate.getDayOfMonth()){
+                    nextDate = nextDate.plusMonths(1);
                 }
-                while (nextDate.getDayOfMonth() != task.getCreationTimeDate().getDayOfMonth()) {
-                    nextDate.plusDays(1);
+                while (nextDate.getDayOfMonth() != taskDate.getDayOfMonth()) {
+                    nextDate = nextDate.plusDays(1);
                 }
                 return nextDate;
             case YEARLY:
-                if (nextDate.getDayOfYear() > task.getCreationTimeDate().getDayOfYear()) {
-                    nextDate.plusYears(1);
+                if (nextDate.getDayOfYear() > taskDate.getDayOfYear()) {
+                    nextDate = nextDate.plusYears(1);
                 }
-                while (nextDate.getMonthValue() < task.getCreationTimeDate().getMonthValue()) {
-                    nextDate.plusMonths(1);
+                while (nextDate.getMonthValue() < taskDate.getMonthValue()) {
+                    nextDate = nextDate.plusMonths(1);
                 }
                 nextDate = nextDate.withDayOfMonth(0);
-                while (nextDate.getDayOfMonth() != task.getCreationTimeDate().getDayOfMonth()) {
-                    nextDate.plusDays(1);
+                while (nextDate.getDayOfMonth() != taskDate.getDayOfMonth()) {
+                    nextDate = nextDate.plusDays(1);
                 }
                 return nextDate;
         }
