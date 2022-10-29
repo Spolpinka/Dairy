@@ -8,8 +8,8 @@ import java.util.*;
 //В ежедневник можно заносить задачи, можно удалять их, можно получать список задач на предстоящий день.
 //Все задачи должны храниться в коллекции, тип которой нужно выбрать самостоятельно как самый оптимальный для работы.
 public class Dairy {
-    private static HashMap<Integer, Task> dairy = new HashMap<>();
-    private static HashMap<Integer, Task> deletedTasks = new HashMap<>();
+    private final static HashMap<Integer, Task> dairy = new HashMap<>();
+    private final static HashMap<Integer, Task> deletedTasks = new HashMap<>();
 
     public void addTask(Task task) throws NoTaskException {
         if (task != null) {
@@ -23,7 +23,7 @@ public class Dairy {
         List<Task> taskList = new ArrayList<>();
         for (Map.Entry<Integer, Task> task :
                 dairy.entrySet()) {
-            LocalDate localDate = task.getValue().getCreationTimeDate();
+            LocalDate localDate = task.getValue().getCreationDate();
             if (localDate.getDayOfMonth() == date.getDayOfMonth() ||
                     localDate.getDayOfYear() == date.getDayOfYear() ||
                     localDate.getDayOfWeek().getValue() == date.getDayOfWeek().getValue() ||

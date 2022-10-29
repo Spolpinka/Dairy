@@ -16,10 +16,10 @@ import java.util.Objects;
 public class Task {
     private String name;
     private String describe;
-    private TypeOfTasks type;
-    private LocalDate creationTimeDate;
-    private Repeatable repeatable;
-    private int ID;
+    private final TypeOfTasks type;
+    private final LocalDate creationDate;
+    private final Repeatable repeatable;
+    private final int ID;
     private static int counter;
 
 
@@ -31,36 +31,69 @@ public class Task {
         } else {
             throw new NoNameException("У задачи отсутствует заголовок!");
         }
-        this.describe = "";//можно не указывать, тогда поле пустое
         if (type != null) {
             this.type = type;
         } else {
             throw new NoTypeException("У задачи отсутствует тип личная/рабочая!");
         }
-        this.creationTimeDate = LocalDate.now();
-        this.ID = counter+1;
-        this.repeatable = Repeatable.ONCE;//по умолчанию однократно
+        this.describe = "";//можно не указывать, тогда поле пустое
+        creationDate = LocalDate.now();
+        ID = counter+1;
+        counter++;
+        repeatable = Repeatable.ONCE;//по умолчанию однократно
         System.out.println("Задача " + name + " создана!");
     }
 
     public Task(String name, String describe, TypeOfTasks type)
             throws NoNameException, NoTypeException, NoDescException {
-        new Task(name, type);
+        if (name != null && !name.isEmpty() && !name.isBlank()) {
+            this.name = name;
+        } else {
+            throw new NoNameException("У задачи отсутствует заголовок!");
+        }
+        if (type != null) {
+            this.type = type;
+        } else {
+            throw new NoTypeException("У задачи отсутствует тип личная/рабочая!");
+        }
         if (describe != null && !describe.isBlank() && !describe.isEmpty()) {
             this.describe = describe;
         } else {
             throw new NoDescException("У задачи нет описания!");
         }
+        creationDate = LocalDate.now();
+        ID = counter+1;
+        counter++;
+        repeatable = Repeatable.ONCE;
+        System.out.println("Задача " + name + " создана!");
     }
 
     public Task(String name, String describe, TypeOfTasks type, Repeatable repeatable)
             throws NoNameException, NoTypeException, NoDescException, NoRepeatException {
-        new Task(name, describe, type);
+        if (name != null && !name.isEmpty() && !name.isBlank()) {
+            this.name = name;
+        } else {
+            throw new NoNameException("У задачи отсутствует заголовок!");
+        }
+        if (type != null) {
+            this.type = type;
+        } else {
+            throw new NoTypeException("У задачи отсутствует тип личная/рабочая!");
+        }
+        if (describe != null && !describe.isBlank() && !describe.isEmpty()) {
+            this.describe = describe;
+        } else {
+            throw new NoDescException("У задачи нет описания!");
+        }
+        creationDate = LocalDate.now();
+        ID = counter+1;
+        counter++;
         if (repeatable != null) {
             this.repeatable = repeatable;
         } else {
-            throw new NoRepeatException("У задачи не признака повторяемости!");
+            throw new NoRepeatException("У задачи нет признака повторяемости!");
         }
+        System.out.println("Задача " + name + " создана!");
     }
     public String getName() {
         return name;
@@ -82,8 +115,8 @@ public class Task {
         return type;
     }
 
-    public LocalDate getCreationTimeDate() {
-        return creationTimeDate;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
     public Repeatable getRepeatable() {
@@ -100,7 +133,7 @@ public class Task {
                 " Заголовок - " + name +
                 ", описание - " + describe +
                 ", тип - " + type +
-                ", дата создания: " + creationTimeDate.getDayOfMonth() + "." + creationTimeDate.getMonthValue() + "." + creationTimeDate.getYear() +
+                ", дата создания: " + creationDate.getDayOfMonth() + "." + creationDate.getMonthValue() + "." + creationDate.getYear() +
                 ", повторяется - " + repeatable.getMessage() +
                 ", ID - " + ID;
     }
@@ -112,12 +145,12 @@ public class Task {
         Task task = (Task) o;
         return ID == task.ID && Objects.equals(name, task.name) &&
                 Objects.equals(describe, task.describe) &&
-                type == task.type && Objects.equals(creationTimeDate, task.creationTimeDate) &&
+                type == task.type && Objects.equals(creationDate, task.creationDate) &&
                 repeatable == task.repeatable;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, describe, type, creationTimeDate, repeatable, ID);
+        return Objects.hash(name, describe, type, creationDate, repeatable, ID);
     }
 }

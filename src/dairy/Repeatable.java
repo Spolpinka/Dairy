@@ -15,7 +15,7 @@ public enum Repeatable {
 
     public LocalDate getNextDate(Task task) {
         LocalDate nextDate = LocalDate.now();
-        LocalDate taskDate = task.getCreationTimeDate();
+        LocalDate taskDate = task.getCreationDate();
         switch (this) {
             case DAILY:
                 return nextDate;

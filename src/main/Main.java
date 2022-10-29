@@ -9,12 +9,10 @@ import exceptions.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    private static Dairy dairy = new Dairy();
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -34,14 +32,19 @@ public class Main {
                         break;
                     case 4:
                         getDeletedTasks();
+                        break;
                     case 5:
                         printAllTasks();
+                        break;
                     case 6:
                         setTaskName(sc);
+                        break;
                     case 7:
                         setTaskDescription(sc);
+                        break;
                     case 8:
                         getGroupedTasks(sc);
+                        break;
                     case 0:
                         System.exit(0);
                 }
@@ -75,16 +78,18 @@ public class Main {
         TypeOfTasks type = getTypeOfTask(scanner);
         Repeatable repeatable = getRepeatable(scanner);
         try {
-            Dairy dairy = new Dairy();
-            dairy.addTask(new Task(taskName, taskDescribe, type, repeatable));
+            Task task = new Task(taskName, taskDescribe, type, repeatable);
+            System.out.println("пробуем добавить " + taskName + " описание " + taskDescribe + " тип " + type + " повтор " +  repeatable);
+            dairy.addTask(task);
+            System.out.println("должно было добавиться");
+            System.out.println(Dairy.getDairy().size());
         } catch (NoNameException | NoTypeException | NoDescException | NoRepeatException | NoTaskException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage() + e.getStackTrace());
         }
 
     }
 
     private static TypeOfTasks getTypeOfTask(Scanner scanner) {
-        TypeOfTasks type;
         while (true) {
             System.out.println("Введите категорию задачи:\n" +
                     "0. личная,\n" +
@@ -105,7 +110,6 @@ public class Main {
     }
 
     private static Repeatable getRepeatable(Scanner scanner) {
-        Repeatable repeatable;
         while (true) {
             System.out.println("Введите повторяемость задачи:\n" +
                     "0. однократная,\n" +
@@ -138,10 +142,9 @@ public class Main {
     private static void getTasksOnDay(Scanner scanner) {
         while (true) {
             System.out.println("введите дату для печати заданий в формате DD-MM-YYYY : ");
-            Dairy dairy = new Dairy();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
             String dateS = scanner.nextLine();
-            LocalDate date = null;
+            LocalDate date;
             try {
                 date = LocalDate.parse(dateS, formatter);
             } catch (DateTimeParseException e) {
@@ -149,8 +152,8 @@ public class Main {
                 continue;
             }
             List<Task> tasksOnDate = dairy.getTasksOnDate(date);//получили список задач
-            for (int i = 0; i < tasksOnDate.size(); i++) {//напечатали список задач
-                System.out.println(tasksOnDate.get(i));
+            for (Task task : tasksOnDate) {//напечатали список задач
+                System.out.println(task);
             }
             break;
         }
@@ -171,13 +174,14 @@ public class Main {
     }
 
     private static void setTaskName(Scanner scanner) {
-        Dairy dairy = new Dairy();
         int id;
         while (true) {
             System.out.println("Введите id задачи для изменения её заголовка: ");
             if (scanner.hasNextInt()) {
                 id = scanner.nextInt();
-                if (dairy.isTaskExist(id)) {
+                if (Dairy.isTaskExist(id)) {
+                    System.out.println("Введите новый заголовок задачи:");
+                    dairy.setTaskName(id, scanner.nextLine());
                     break;
                 } else {
                     System.out.println("Задачи с таким id не существует, уточните id");
@@ -190,13 +194,14 @@ public class Main {
         dairy.setTaskName(id, scanner.nextLine());
     }
     private static void setTaskDescription(Scanner scanner) {
-        Dairy dairy = new Dairy();
         int id;
         while (true) {
             System.out.println("Введите id задачи для изменения её заголовка: ");
             if (scanner.hasNextInt()) {
                 id = scanner.nextInt();
-                if (dairy.isTaskExist(id)) {
+                if (Dairy.isTaskExist(id)) {
+                    System.out.println("Введите новое описание задания: ");
+                    dairy.setTaskDescription(id, scanner.nextLine());
                     break;
                 } else {
                     System.out.println("Задачи с таким id не существует, уточните id");
@@ -205,17 +210,15 @@ public class Main {
                 System.out.println("Введено не число, попробуйте еще раз!");
             }
         }
-        System.out.println("Введите новое описание задания: ");
         dairy.setTaskDescription(id, scanner.nextLine());
     }
 
     private static void getGroupedTasks(Scanner scanner) {
         while (true) {
             System.out.println("введите крайнюю дату для выгрузки сгруппированных тасков в формате DD-MM-YYYY : ");
-            Dairy dairy = new Dairy();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
             String dateS = scanner.nextLine();
-            LocalDate date = null;
+            LocalDate date;
             try {
                 date = LocalDate.parse(dateS, formatter);
             } catch (DateTimeParseException e) {
@@ -233,6 +236,7 @@ public class Main {
                     System.out.println(t);
                 }
             }
+            break;
         }
     }
 
@@ -252,11 +256,10 @@ public class Main {
                 continue;
             }
 
-            Dairy dairy = new Dairy();
             try {
                 dairy.deleteTask(taskID);
             } catch (NoTaskException e) {
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
         }
     }
