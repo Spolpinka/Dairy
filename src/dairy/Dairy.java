@@ -23,11 +23,7 @@ public class Dairy {
         List<Task> taskList = new ArrayList<>();
         for (Map.Entry<Integer, Task> task :
                 dairy.entrySet()) {
-            LocalDate localDate = task.getValue().getCreationDate();
-            if (localDate.getDayOfMonth() == date.getDayOfMonth() ||
-                    localDate.getDayOfYear() == date.getDayOfYear() ||
-                    localDate.getDayOfWeek().getValue() == date.getDayOfWeek().getValue() ||
-                    task.getValue().getRepeatable().equals(Repeatable.DAILY)) {
+            if (task.getValue().getRepeatable().getNextDate(date, task.getValue())) {
                 taskList.add(task.getValue());
             }
         }

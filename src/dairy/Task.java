@@ -4,6 +4,8 @@ import exceptions.NoDescException;
 import exceptions.NoNameException;
 import exceptions.NoRepeatException;
 import exceptions.NoTypeException;
+import repeateble.Once;
+import repeateble.Repeatable;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -18,7 +20,7 @@ public class Task {
     private String describe;
     private final TypeOfTasks type;
     private final LocalDate creationDate;
-    private final Repeatable repeatable;
+    private final repeateble.Repeatable repeatable;
     private final int ID;
     private static int counter;
 
@@ -40,7 +42,7 @@ public class Task {
         creationDate = LocalDate.now();
         ID = counter+1;
         counter++;
-        repeatable = Repeatable.ONCE;//по умолчанию однократно
+        repeatable = new Once();//по умолчанию однократно
         System.out.println("Задача " + name + " создана!");
     }
 
@@ -64,11 +66,11 @@ public class Task {
         creationDate = LocalDate.now();
         ID = counter+1;
         counter++;
-        repeatable = Repeatable.ONCE;
+        repeatable = new Once();
         System.out.println("Задача " + name + " создана!");
     }
 
-    public Task(String name, String describe, TypeOfTasks type, Repeatable repeatable)
+    public Task(String name, String describe, TypeOfTasks type, repeateble.Repeatable repeatable)
             throws NoNameException, NoTypeException, NoDescException, NoRepeatException {
         if (name != null && !name.isEmpty() && !name.isBlank()) {
             this.name = name;
@@ -134,7 +136,7 @@ public class Task {
                 ", описание - " + describe +
                 ", тип - " + type +
                 ", дата создания: " + creationDate.getDayOfMonth() + "." + creationDate.getMonthValue() + "." + creationDate.getYear() +
-                ", повторяется - " + repeatable.getMessage() +
+                ", повторяется - " + repeatable +
                 ", ID - " + ID;
     }
 

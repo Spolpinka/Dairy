@@ -1,10 +1,10 @@
 package main;
 
 import dairy.Dairy;
-import dairy.Repeatable;
 import dairy.Task;
 import dairy.TypeOfTasks;
 import exceptions.*;
+import repeateble.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Main {
-    private static Dairy dairy = new Dairy();
+    private final static Dairy dairy = new Dairy();
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -109,7 +109,7 @@ public class Main {
         }
     }
 
-    private static Repeatable getRepeatable(Scanner scanner) {
+    private static repeateble.Repeatable getRepeatable(Scanner scanner) {
         while (true) {
             System.out.println("Введите повторяемость задачи:\n" +
                     "0. однократная,\n" +
@@ -121,15 +121,15 @@ public class Main {
                 int i = scanner.nextInt();
                 switch (i) {
                     case 0:
-                        return Repeatable.ONCE;
+                        return new Once();
                     case 1:
-                        return Repeatable.DAILY;
+                        return new Daily();
                     case 2:
-                        return Repeatable.WEEKLY;
+                        return new Weekly();
                     case 3:
-                        return Repeatable.MONTHLY;
+                        return new Monthly();
                     case 4:
-                        return Repeatable.YEARLY;
+                        return new Yearly();
                     default:
                         System.out.println("введено иное число, выберите из списка!");
                 }

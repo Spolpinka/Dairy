@@ -4,8 +4,13 @@ public enum TypeOfTasks {
 
     PERSONAL("Личная задача"),
     WORK("Рабочая задача");
-    private String message;
+    private final String message;
     TypeOfTasks(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "эта задача " + message;
     }
 }
