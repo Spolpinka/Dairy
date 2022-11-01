@@ -6,13 +6,17 @@ import dairy.TypeOfTasks;
 import exceptions.*;
 import repeateble.*;
 
+import javax.swing.text.html.HTMLDocument;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     private final static Dairy dairy = new Dairy();
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -45,6 +49,9 @@ public class Main {
                     case 8:
                         getGroupedTasks(sc);
                         break;
+                    case 9:
+                        inputTaskNewDate(sc);
+                        break;
                     case 0:
                         System.exit(0);
                 }
@@ -66,6 +73,7 @@ public class Main {
                         "6. Внести изменения в заголовок задачи,\n" +
                         "7. Внести изменение в описание задачи,\n" +
                         "8. Получить задачи сгруппированные по дням за определенный период\n" +
+                        "9. Добавить задачу с датой начала, отличной от текущей\n" +
                         "0. Выход."
         );
     }
@@ -79,7 +87,26 @@ public class Main {
         Repeatable repeatable = getRepeatable(scanner);
         try {
             Task task = new Task(taskName, taskDescribe, type, repeatable);
-            System.out.println("пробуем добавить " + taskName + " описание " + taskDescribe + " тип " + type + " повтор " +  repeatable);
+            System.out.println("пробуем добавить " + taskName + " описание " + taskDescribe + " тип " + type + " повтор " + repeatable);
+            dairy.addTask(task);
+            System.out.println("должно было добавиться");
+            System.out.println(Dairy.getDairy().size());
+        } catch (NoNameException | NoTypeException | NoDescException | NoRepeatException | NoTaskException e) {
+            System.out.println(e.getMessage() + e.getStackTrace());
+        }
+
+    }private static void inputTaskNewDate (Scanner scanner) {
+        System.out.println("Введите название задачи:");
+        String taskName = scanner.next();
+        System.out.println("Введите описание задачи:");
+        String taskDescribe = scanner.next();
+        TypeOfTasks type = getTypeOfTask(scanner);
+        Repeatable repeatable = getRepeatable(scanner);
+        System.out.println("Введите первую дату задачи");
+        LocalDate date = getDate(scanner);
+        try {
+            Task task = new Task(taskName, taskDescribe, type, repeatable, date);
+            System.out.println("пробуем добавить " + taskName + " описание " + taskDescribe + " тип " + type + " повтор " + repeatable);
             dairy.addTask(task);
             System.out.println("должно было добавиться");
             System.out.println(Dairy.getDairy().size());
@@ -116,7 +143,7 @@ public class Main {
                     "1. ежедневная,\n" +
                     "2. еженедельная,\n" +
                     "3. ежемесячная,\n" +
-                    "4. ежегодная.\n");
+                    "4. ежегодная.");
             if (scanner.hasNextInt()) {
                 int i = scanner.nextInt();
                 switch (i) {
@@ -140,24 +167,12 @@ public class Main {
     }
 
     private static void getTasksOnDay(Scanner scanner) {
-        while (true) {
-            System.out.println("введите дату для печати заданий в формате DD-MM-YYYY : ");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
-            String dateS = scanner.nextLine();
-            LocalDate date;
-            try {
-                date = LocalDate.parse(dateS, formatter);
-            } catch (DateTimeParseException e) {
-                System.out.println("Неверный формат ввода");
-                continue;
-            }
-            List<Task> tasksOnDate = dairy.getTasksOnDate(date);//получили список задач
-            for (Task task : tasksOnDate) {//напечатали список задач
-                System.out.println(task);
-            }
-            break;
+        List<Task> tasksOnDate = dairy.getTasksOnDate(getDate(scanner));//получили список задач
+        for (Task task : tasksOnDate) {//напечатали список задач
+            System.out.println(task);
         }
     }
+
     private static void getDeletedTasks() {
         HashMap<Integer, Task> deletedTasks = Dairy.getDeletedTasks();
         for (Map.Entry<Integer, Task> task : deletedTasks.entrySet()) {//выводим в консоль удаленные задачи
@@ -193,6 +208,7 @@ public class Main {
         System.out.println("Введите новый заголовок задания: ");
         dairy.setTaskName(id, scanner.nextLine());
     }
+
     private static void setTaskDescription(Scanner scanner) {
         int id;
         while (true) {
@@ -214,29 +230,17 @@ public class Main {
     }
 
     private static void getGroupedTasks(Scanner scanner) {
-        while (true) {
-            System.out.println("введите крайнюю дату для выгрузки сгруппированных тасков в формате DD-MM-YYYY : ");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MM-yyyy");
-            String dateS = scanner.nextLine();
-            LocalDate date;
-            try {
-                date = LocalDate.parse(dateS, formatter);
-            } catch (DateTimeParseException e) {
-                System.out.println("Неверный формат ввода");
-                continue;
+        LocalDate date = getDate(scanner);
+        Map<LocalDate, List<Task>> groupedTasks = dairy.getGroupedTasks(date);//получили список задач, сгруппированный по дням, можно сделать любой отрезов времени в принципе
+        for (Map.Entry<LocalDate, List<Task>> entry :
+                groupedTasks.entrySet()) {
+            LocalDate currentDate = entry.getKey();
+            System.out.println("на дату " + currentDate.getDayOfMonth() + "." + currentDate.getMonthValue() +
+                    "." + currentDate.getYear() + ":");
+            for (Task t :
+                    entry.getValue()) {
+                System.out.println(t);
             }
-            Map<LocalDate, List<Task>> groupedTasks = dairy.getGroupedTasks(date);//получили список задач, сгруппированный по дням, можно сделать любой отрезов времени в принципе
-            for (Map.Entry<LocalDate, List < Task >> entry:
-            groupedTasks.entrySet()){
-                LocalDate currentDate = entry.getKey();
-                System.out.println("на дату " + currentDate.getDayOfMonth() + "." + currentDate.getMonthValue() +
-                        "." + currentDate.getYear() + ":");
-                for (Task t :
-                        entry.getValue()) {
-                    System.out.println(t);
-                }
-            }
-            break;
         }
     }
 
@@ -260,6 +264,20 @@ public class Main {
                 dairy.deleteTask(taskID);
             } catch (NoTaskException e) {
                 System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private static LocalDate getDate(Scanner scanner) {
+        while (true) {
+            try {
+            System.out.println("введите дату в формате DD-MM-YYYY:");
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                return LocalDate.parse(scanner.next(), formatter);
+            } catch (Exception e) {
+                System.out.println("Неверный формат ввода");
             }
         }
     }

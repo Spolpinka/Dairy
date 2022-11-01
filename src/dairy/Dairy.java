@@ -34,8 +34,14 @@ public class Dairy {
         Map<LocalDate, List<Task>> groupedTasks = new LinkedHashMap<>();
         LocalDate day = LocalDate.now();
 
-        while (day.getDayOfYear() == date.getDayOfYear()) {//выбираем задания на каждый день до заданного пользователем
+        while (!day.equals(date)) {//выбираем задания на каждый день до заданного пользователем
             List<Task> tasksOnDay = new ArrayList<>();
+            for (Map.Entry<Integer, Task> entry :
+                    dairy.entrySet()) {
+                if (entry.getValue().getRepeatable().getNextDate(day, entry.getValue())) {
+                    tasksOnDay.add(entry.getValue());
+                }
+            }
             groupedTasks.put(day, tasksOnDay);
             day = day.plusDays(1);
         }

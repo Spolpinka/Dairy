@@ -11,6 +11,6 @@ public enum TypeOfTasks {
 
     @Override
     public String toString() {
-        return "эта задача " + message;
+        return message;
     }
 }
